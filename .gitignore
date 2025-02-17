@@ -1,0 +1,74 @@
+# Node.js関連
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Expo関連
+.expo/
+.expo-shared/
+
+# MacOS関連
+.DS_Store
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Android関連
+android/.gradle/
+android/app/build/
+android/.idea/
+android/local.properties
+android/.idea/caches
+android/.idea/libraries
+android/.idea/modules.xml
+android/.idea/workspace.xml
+android/.idea/navEditor.xml
+android/.idea/assetWizardSettings.xml
+android/.idea/gradle.xml
+android/.idea/assetWizardSettings.xml
+android/app/src/main/assets/shell-app.bundle
+android/app/src/main/assets/shell-app.manifest
+android/app/build/intermediates/
+android/app/re/
+android/app/debug/
+
+# iOS関連
+ios/Pods/
+ios/build/
+ios/DerivedData/
+ios/.ideaios/.vscode/
+ios/xcuserdata/
+ios/*.workspace
+ios/*.xcworkspacedata
+ios/*.xcodeproj/project.xcworkspace/xcuserdata/
+ios/*.xcodeproj/project.xcworkspace/xcshareddata/
+ios/*.xcodeproj/xcuserdata/
+
+# VS Code関連
+.vscode/
+
+# IntelliJ IDEA関連
+.idea/
+*.iml
+
+# その他のエディタ関連
+*.swp
+*.swo
+*.swn
+*~
+
+# バックアップファイル
+*.bak
+*.tmp
+*.temp
+
+# 環境設定ファイル
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local

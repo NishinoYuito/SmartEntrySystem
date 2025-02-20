@@ -1,25 +1,24 @@
 ```markdown
 ## ディレクトリ構成
-SmartEntrySystem/
-├── assets/
-│   ├── adaptive-icon.png
-│   ├── icon.png
-│   ├── splash.png
-│   └── favicon.png
-├── components/
-│   └── ExampleComponent.js
-├── screens/
-│   └── HomeScreen.js
-├── navigation/
-│   └── AppNavigator.js
-├── App.js
-├── app.json
-├── package.json
-├── babel.config.js
-├── node_modules/
-├── .gitignore
-├── README.md
-└── yarn.lock or package-lock.json
+SMARTER_PROJECT/
+├── .expo/             # Expo のビルド情報やキャッシュデータを格納
+├── api/               # API 関連のモジュールを管理
+├── app/               # アプリの主要なコンポーネントや画面を管理
+│   ├── components/    # 再利用可能な UI コンポーネント
+│   ├── constants/     # 定数（例: 色や API エンドポイント）
+│   ├── hooks/         # カスタムフックを格納
+│   └── screens/       # 画面（スクリーン）コンポーネント
+├── assets/            # 画像やフォントなどの静的アセット
+│   └── images/        # 画像ファイルを格納
+├── node_modules/      # npm パッケージの依存関係
+├── .gitignore         # Git で無視するファイルを指定
+├── app.json           # Expo の設定ファイル
+├── babel.config.js    # Babel の設定ファイル
+├── expo-env.d.ts      # Expo 環境の型定義ファイル
+├── package-lock.json  # npm の依存関係を固定するファイル
+├── package.json       # プロジェクトのパッケージ管理ファイル
+├── README.md          # 本ファイル（プロジェクトの説明）
+└── tsconfig.json      # TypeScript の設定ファイル
 
 ## 必要なソフトウェア
 
@@ -60,22 +59,3 @@ Expo開発ツールが起動したら、QRコードをスキャンするか、�
 iOS: Xcodeのシミュレーターを使用するか、Expo GoアプリをインストールしてQRコードをスキャンします。
 Android: Android Studioのエミュレーターを使用するか、Expo GoアプリをインストールしてQRコードをスキャンします。
 
-##　プロジェクト構造の説明
-assets/:
-アプリで使用する静的なアセット（画像、フォント、アイコンなど）を格納します。
-components/:
-再利用可能なReactコンポーネントを格納します。
-screens/:
-各画面のコンポーネントを格納します。
-navigation/:
-ナビゲーション関連の設定やコンポーネントを格納します。
-App.js:
-アプリのエントリーポイントです。
-app.json:
-Expoプロジェクトの設定ファイルです。アプリの名前、バージョン、アイコン、スプラッシュスクリーンなどを設定します。
-package.json:
-プロジェクトの依存関係やスクリプトを管理するファイルです。
-babel.config.js:
-Babelの設定ファイルです。
-.gitignore:
-Gitで管理しないファイルやディレクトリを指定するファイルです。

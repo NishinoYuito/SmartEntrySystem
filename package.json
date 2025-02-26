@@ -2,7 +2,7 @@
   "name": "smartentrysystem",
   "main": "expo-router/entry",
   "version": "1.0.0",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",

@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "./screens/HomeScreen";
 import Scanner from "./screens/Scanner";
 import Generator from "./screens/Generator";
+import "./global.css"
 
 //スタックナビゲーターのおかげで、画面間の移動ができます
 const Stack = createStackNavigator();

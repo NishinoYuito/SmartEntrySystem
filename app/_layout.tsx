@@ -1,6 +1,15 @@
 import React from "react";
-import { Stack } from "expo-router";
+import { Slot, Stack } from "expo-router";
 
 export default function Layout() {
-  return <Stack screenOptions={{ headerShown: false }} />;
+  // return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <Stack
+      screenOptions={{
+        headerTitle: "Smart Entry System",
+      }}
+    >
+      <Slot />
+    </Stack>
+  );
 }

@@ -8,8 +8,23 @@ import {
 } from "react-native";
 import { useColorScheme } from "nativewind";
 import Toast from 'react-native-toast-message';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
 
-const EntryExitSystem = ({ navigation, route }) => {
+type RootStackParamList = {
+  ホーム: { toastMessage: boolean };
+  スキャナー: undefined;
+  ジェネレータ: undefined;
+}
+
+type EntryExitScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ホーム'>;
+type EntryExitScreenRouteProp = RouteProp<RootStackParamList, 'ホーム'>;
+interface Props {
+  navigation: EntryExitScreenNavigationProp;
+  route: EntryExitScreenRouteProp;
+}
+
+const EntryExitSystem: React.FC<Props> = ({ navigation, route }) => {
   const [selectedButton, setSelectedButton] = useState<string | null>(null);
   const { colorScheme } = useColorScheme();
 

@@ -9,7 +9,7 @@ import "./global.css"
 import Toast from 'react-native-toast-message';
 
 type RootStackParamList = {
-  ホーム: undefined;
+  ホーム: { toastMessage: boolean };
   スキャナー: undefined;
   ジェネレータ: undefined;
 }

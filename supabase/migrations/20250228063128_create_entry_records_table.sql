@@ -1,4 +1,4 @@
--- ① テーブル作成 (同行者テーブル)
+-- ① テーブル作成 (入室記録テーブル)
 CREATE TABLE public.entry_records (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   visitor_id UUID NOT NULL,

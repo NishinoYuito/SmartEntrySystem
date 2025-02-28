@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,14 +7,25 @@ import {
   StatusBar,
 } from "react-native";
 import { useColorScheme } from "nativewind";
+import Toast from 'react-native-toast-message';
 
-export default function EntryExitSystem() {
+const EntryExitSystem = ({ navigation, route }) => {
   const [selectedButton, setSelectedButton] = useState<string | null>(null);
   const { colorScheme } = useColorScheme();
 
+  useEffect(() => {
+    if (route.params?.toastMessage) {
+      Toast.show({
+        type: 'success',
+        text1: 'QRコード生成しました！',
+        text2: 'メール送りました！'
+      });
+    }
+  }, [route.params?.toastMessage]);
+
+
   const handleButtonPress = (buttonType: string) => {
     setSelectedButton(buttonType);
-    // Add haptic feedback here if desired
   };
 
   return (
@@ -37,10 +48,10 @@ export default function EntryExitSystem() {
         <View className="space-y-5">
           {/*　入室ボタン */}
           <TouchableOpacity
-            className={`bg-emerald-500 py-5 rounded-xl shadow-lg ${
+            className={`mb-8 bg-emerald-500 py-5 rounded-xl shadow-lg ${
               selectedButton === "enter" ? "border-4 border-emerald-700" : ""
             }`}
-            onPress={() => handleButtonPress("enter")}
+            onPress={() => navigation.navigate("スキャナー")}
             activeOpacity={0.8}
             style={{
               transform: [{ scale: selectedButton === "enter" ? 0.98 : 1 }],
@@ -72,7 +83,7 @@ export default function EntryExitSystem() {
             className={`bg-indigo-600 py-5 rounded-xl shadow-lg mt-8 ${
               selectedButton === "register" ? "border-4 border-indigo-800" : ""
             }`}
-            onPress={() => handleButtonPress("register")}
+            onPress={() => navigation.navigate("ジェネレータ")}
             activeOpacity={0.8}
             style={{
               transform: [{ scale: selectedButton === "register" ? 0.98 : 1 }],
@@ -86,4 +97,6 @@ export default function EntryExitSystem() {
       </View>
     </SafeAreaView>
   );
-}
+};
+
+export default EntryExitSystem;

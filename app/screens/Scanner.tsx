@@ -32,7 +32,7 @@ export default function Scanner() {
         if (supported) {
           Linking.openURL(data);
         } else {
-          alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+          alert(`${type} のQRコードの内容： ${data} を読み込みました!`);
         }
       });
     

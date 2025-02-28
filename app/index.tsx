@@ -1,30 +1,32 @@
 import React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import HomeScreen from "./screens/HomeScreen";
+import HomeScreen from "./screens/TopPage";
 import Scanner from "./screens/Scanner";
 import Generator from "./screens/Generator";
 import "./global.css"
 
-//スタックナビゲーターのおかげで、画面間の移動ができます
-const Stack = createStackNavigator();
+import Toast from 'react-native-toast-message';
 
-// export default function App() {
-//   return <HomeScreen />;
-// }
-
-function App() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="ホーム" component={HomeScreen} />
-      <Stack.Screen name="スキャナー" component={Scanner} />
-      <Stack.Screen name="ジェネレータ" component={Generator} />
-    </Stack.Navigator>
-  );
+type RootStackParamList = {
+  ホーム: undefined;
+  スキャナー: undefined;
+  ジェネレータ: undefined;
 }
 
-export default () => {
+//スタックナビゲーターのおかげで、画面間の移動ができます
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+export default function App () {
   return (
-    <App />
+    <>
+      <Stack.Navigator
+        screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="ホーム" component={HomeScreen} />
+        <Stack.Screen name="スキャナー" component={Scanner} />
+        <Stack.Screen name="ジェネレータ" component={Generator} />
+      </Stack.Navigator>
+      <Toast />
+    </>
   );
 };

@@ -20,7 +20,7 @@ export default function Generator() {
   const [visitDate, setVisitDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
-  const [additionalVisitors, setAdditionalVisitors] = useState([{ name: '' }]);
+  const [additionalVisitors, setAdditionalVisitors] = useState([{ id: '', name: '' }]);
   const [visitReasons, setVisitReasons] = useState([
     { id: 1, reason: 'プロジェクト定例会、お打ち合わせ', checked: false },
     { id: 2, reason: '営業アポイントメント', checked: false },

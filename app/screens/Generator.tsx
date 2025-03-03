@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, ScrollView, Alert, Modal, ActivityIndicator } from 'react-native';
-import { Checkbox, Provider as PaperProvider } from 'react-native-paper';
+import { RadioButton, Provider as PaperProvider } from 'react-native-paper';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -9,6 +9,7 @@ import CryptoES from 'crypto-es';
 import { useNavigation } from "@react-navigation/native";
 import * as MailComposer from 'expo-mail-composer';
 import * as FileSystem from "expo-file-system";
+import { supabase } from "../../utils/supabase";
 
 export default function Generator() {
   const navigation = useNavigation();
@@ -22,18 +23,15 @@ export default function Generator() {
   const [show, setShow] = useState(false);
   const [additionalVisitors, setAdditionalVisitors] = useState([{ id: '', name: '' }]);
   const [visitReasons, setVisitReasons] = useState([
-    { id: 1, reason: 'プロジェクト定例会、お打ち合わせ', checked: false },
-    { id: 2, reason: '営業アポイントメント', checked: false },
-    { id: 3, reason: '面接、面談', checked: false },
-    { id: 4, reason: 'その他', checked: false },
+    { id: '1', reason: 'プロジェクト定例会、お打ち合わせ' },
+    { id: '2', reason: '営業アポイントメント'},
+    { id: '3', reason: '面接、面談' },
+    { id: '4', reason: 'その他' },
   ]);
+  const [selectedReason, setSelectedReason] = useState('');
   const [otherReason, setOtherReason] = useState('');
   const [loading, setLoading] = useState(false);
-
-  // const [qrCodeUrl, setQrCodeUrl] = useState("");
-  // const [qrValue, setQrValue] = useState('');
-  // const [encryptedUUID, setEncryptedUUID] = useState('');
-  // const [decryptedUUID, setDecryptedUUID] = useState('');
+  const [loadingText, setLoadingText] = useState('');
 
   const onChange = (event: never, selectedDate: never) => {
     const currentDate = selectedDate;
@@ -113,16 +111,15 @@ export default function Generator() {
     else if (!companyName) {
       alert('会社名を入力してください。')
     }
+    else if (selectedReason === '4' && otherReason == '') {
+      alert ('その他の目的を記入してください。')
+    }
     else {
       const visitorUUID = uuidv4();
+      setLoadingText('QRコード生成中．．．');
       setLoading(true); // Show loading screen
-
+      
       const hash = CryptoES.AES.encrypt(visitorUUID, secretKey);
-      // setEncryptedUUID(hash.toString()); // Set the encrypted UUID
-      // setQrValue(hash.toString()); // Set the value for the QR code
-
-      // const decrypted = CryptoES.AES.decrypt(hash, secretKey);
-      // setDecryptedUUID(decrypted.toString(CryptoES.enc.Utf8));
 
       const url = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(hash.toString())}`
 
@@ -137,7 +134,6 @@ ${visitor} 様
 
 下記内容にて来客予約を受け付けました。
 弊社ご入室の際は、弊社担当に添付のQRコードをお見せください。
-
 
 訪問日時：${visitDate.toLocaleString('ja-JP', options)}
 ご案内先：7F アルサーガパートナーズ 株式会社
@@ -156,14 +152,54 @@ ${visitor} 様
         } else {
           Alert.alert('エラー', 'MailComposerはこのデバイスに存在しません。');
         }
-  
-        setLoading(false);
-        navigation.replace('ホーム', { toastMessage: true });
       } catch (error) {
-        console.error('メール作成エラー:', error);
         setLoading(false);
         Alert.alert('エラー', 'メール送信失敗しました。もう一度送信してください。');
       }
+      
+      // Insert data into Supabase
+      setLoadingText('訪問者テーブルにデータを入れる中．．．');
+
+      const { data, error: visitorError } = await supabase
+        .from('visitors')
+        .insert([
+          {
+            id: visitorUUID,
+            visitor_name: visitor,
+            company_name: companyName,
+            visitor_email: mailAddress,
+            visit_date: visitDate,
+            visit_purpose: selectedReason,
+            visit_purpose_detail: otherReason || null
+          }
+        ]);
+
+      if (visitorError) {
+        Alert.alert('エラー', 'データベースの訪問者テーブルにデータの挿入が失敗しました。');
+        throw visitorError;
+      }
+      
+      if (additionalVisitors.length != 0) {
+        setLoadingText('同行者テーブルにデータを入れる中．．．');
+        for (const v of additionalVisitors) {
+          const { error: companionError } = await supabase
+            .from('companions')
+            .insert([
+              {
+                visitor_id: visitorUUID,
+                companion_name: v.name
+              }
+            ]);
+
+          if (companionError) {
+            Alert.alert('エラー', 'データベースの同行者テーブルにデータの挿入が失敗しました。');
+            throw companionError;
+          }
+        }
+      }
+
+      setLoading(false);
+      navigation.replace('ホーム', { toastMessage: true });
     }
   };
 
@@ -211,15 +247,16 @@ ${visitor} 様
           <Text className="mb-2">来社目的:</Text>
           {visitReasons.map(reason => (
             <View key={reason.id} className="flex-row items-center mb-2">
-              <Checkbox
-                status={reason.checked ? 'checked' : 'unchecked'}
-                onPress={() => handleCheckboxChange(reason.id)}
+              <RadioButton
+                value={reason.id}
+                status={selectedReason === reason.id ? 'checked' : 'unchecked'}
+                onPress={() => setSelectedReason(reason.id)}
               />
               <Text>{reason.reason}</Text>
             </View>
           ))}
 
-          {visitReasons.find(reason => reason.id === 4)?.checked && (
+          {selectedReason === '4' && (
             <View className="mb-5">
               <Text className="mb-2">記入:</Text>
               <TextInput
@@ -284,7 +321,7 @@ ${visitor} 様
       >
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
           <ActivityIndicator size="large" color="#0000ff" />
-          <Text style={{ marginTop: 10, fontSize: 18, color: '#fff' }}>QRコード生成中．．．</Text>
+          <Text style={{ marginTop: 10, fontSize: 18, color: '#fff' }}>{loadingText}</Text>
         </View>
       </Modal>
     </PaperProvider>
